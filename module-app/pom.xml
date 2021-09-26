@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.springboot.multimodule</groupId>
+		<artifactId>springboot-multimodule</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<packaging>jar</packaging>
+
+	<artifactId>module-app</artifactId>
+	<name>module-app</name>
+	<description>Main module of this project. 
+	It contains the application class in which the main method is defined that is necessary to run the Spring Boot Application. 
+	It also contains application configuration properties, controllers and resources.</description>
+	
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.springboot.multimodule</groupId>
+			<artifactId>module-persistence</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.springboot.multimodule</groupId>
+			<artifactId>module-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>local</id>
+			<properties>
+				<activatedProperties>local</activatedProperties>
+				<build.profile.id>local</build.profile.id>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<directory>${project.basedir}/target/${build.profile.id}</directory>
+			</build>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+				<build.profile.id>dev</build.profile.id>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+			<build>
+				<directory>${project.basedir}/target/${build.profile.id}</directory>
+			</build>
+		</profile>
+		<profile>
+			<id>cert</id>
+			<properties>
+				<build.profile.id>cert</build.profile.id>
+				<activatedProperties>cert</activatedProperties>
+			</properties>
+			<build>
+				<directory>${project.basedir}/target/${build.profile.id}</directory>
+			</build>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<build.profile.id>prod</build.profile.id>
+				<activatedProperties>prod</activatedProperties>
+			</properties>
+			<build>
+				<directory>${project.basedir}/target/${build.profile.id}</directory>
+			</build>
+		</profile>
+	</profiles>
+	
+</project>
