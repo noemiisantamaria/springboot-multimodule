@@ -24,7 +24,7 @@ mvn clean package -Plocal
 Build for other environment
 
 ```bash
-mvn clean package -dev -Dlogging.file.path=./logs/dev
+mvn clean package -Pdev -Dlogging.file.path=./logs/dev
 mvn clean package -Pcert -Dlogging.file.path=./logs/cert
 mvn clean package -Pprod -Dlogging.file.path=./logs/prod
 ```
