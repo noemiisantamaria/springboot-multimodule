@@ -13,7 +13,7 @@ There are 4 properties files:
 * **application-prod.properties** for production environment
 
 ## Build with Maven
-To be able to run a Spring Boot application, it's necessary first build it. To build a Spring Boot application into a single executable Jar file with Maven, use the below command.
+To build a Spring Boot application into a single executable Jar file with Maven, use the below command.
 
 Build for **local** environment
 

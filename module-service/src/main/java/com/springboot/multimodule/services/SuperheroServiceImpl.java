@@ -6,10 +6,7 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +25,9 @@ public class SuperheroServiceImpl implements SuperheroService {
 	SuperheroDao sdao;
 
 	@Override
-	public Page<Superhero> fetchAllSuperheroes(Integer page, Integer rows, String sortValue) {
+	public Page<Superhero> fetchAllSuperheroes(Integer page, Integer rows, String sort) {
 		log.info(info, SERVICE + "fetchAllSuperheroes");
-		String[] sortArray = sortValue.split(":");
-		Sort sort = Sort.by(new Order(Utils.getSortDirection(sortArray[1]), sortArray[0]));
-		Pageable pageable = PageRequest.of(page, rows, sort);
+		Pageable pageable = Utils.getPageable(page, rows, sort);
 		return sdao.findAll(pageable);
 	}
 

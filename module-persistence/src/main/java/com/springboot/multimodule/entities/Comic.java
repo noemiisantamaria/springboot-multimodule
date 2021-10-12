@@ -8,63 +8,42 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="SUPERHERO")
+@Table(name="COMIC")
 @NoArgsConstructor
-public class Superhero implements Serializable {
-
+public class Comic implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
-
-	public Superhero(Long id) {
-		this.id = id;
-	}
-
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID", updatable = false, nullable = false)
 	@Getter @Setter
 	private Long id;
 	
-	@Column(name="NAME")
+	@Column(name="COLLECTIONURI")
 	@NotNull
 	@Getter @Setter
-	private String name;
+	private String collectionUri;
 	
-	@Column(name="DESCRIPTION")
+	@ManyToMany(mappedBy = "comics")
 	@Getter @Setter
-	private String description;
-	
-	@Column(name="THUMBNAIL")
-	@Getter @Setter
-	private String thumbnail;
-	
-	@JsonIgnoreProperties({"superheroes"})
-	@ManyToMany
-	@JoinTable(
-	  name = "SUPERHEROCOMIC", 
-	  joinColumns = @JoinColumn(name = "IDSUPERHERO"), 
-	  inverseJoinColumns = @JoinColumn(name = "IDCOMIC"))
-	@Getter @Setter
-	private Set<Comic> comics;
+	private Set<Superhero> superheroes;
 	
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Superhero [id=")
+		builder.append("Comic [id=")
 				.append(id)
-				.append(", name=").append(name)
+				.append(", collectionUri=").append(collectionUri)
 				.append("]");
 		return builder.toString();
 	}
