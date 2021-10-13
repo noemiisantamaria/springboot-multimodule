@@ -8,9 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +38,16 @@ public class Comic implements Serializable {
 	@Getter @Setter
 	private String collectionUri;
 	
+	@JsonIgnoreProperties({"comics"})
+	@ManyToMany
+	@JoinTable(
+	  name = "COMICITEM", 
+	  joinColumns = @JoinColumn(name = "IDCOMIC"), 
+	  inverseJoinColumns = @JoinColumn(name = "IDITEM"))
+	@Getter @Setter
+	private Set<Item> items;
+	
+	@JsonIgnoreProperties({"comics"})
 	@ManyToMany(mappedBy = "comics")
 	@Getter @Setter
 	private Set<Superhero> superheroes;

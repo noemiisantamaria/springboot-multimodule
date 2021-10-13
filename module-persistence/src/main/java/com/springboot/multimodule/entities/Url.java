@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -21,59 +19,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="SUPERHERO")
+@Table(name="URL")
 @NoArgsConstructor
-public class Superhero implements Serializable {
-
+public class Url implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
-
-	public Superhero(Long id) {
-		this.id = id;
-	}
-
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID", updatable = false, nullable = false)
 	@Getter @Setter
 	private Long id;
 	
-	@Column(name="NAME")
+	@Column(name="TYPE")
 	@NotNull
 	@Getter @Setter
-	private String name;
+	private String type;
 	
-	@Column(name="DESCRIPTION")
+	@Column(name="URL")
 	@Getter @Setter
-	private String description;
+	private String url;
 	
-	@Column(name="THUMBNAIL")
+	@JsonIgnoreProperties({"urls"})
+	@ManyToMany(mappedBy = "urls")
 	@Getter @Setter
-	private String thumbnail;
-	
-	@JsonIgnoreProperties({"superheroes"})
-	@ManyToMany
-	@JoinTable(
-	  name = "SUPERHEROCOMIC", 
-	  joinColumns = @JoinColumn(name = "IDSUPERHERO"), 
-	  inverseJoinColumns = @JoinColumn(name = "IDCOMIC"))
-	@Getter @Setter
-	private Set<Comic> comics;
-	
-	@JsonIgnoreProperties({"superheroes"})
-	@ManyToMany
-	@JoinTable(
-	  name = "SUPERHEROURL", 
-	  joinColumns = @JoinColumn(name = "IDSUPERHERO"), 
-	  inverseJoinColumns = @JoinColumn(name = "IDURL"))
-	@Getter @Setter
-	private Set<Url> urls;
+	private Set<Superhero> superheroes;
 	
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Superhero [id=")
+		builder.append("Comic [id=")
 				.append(id)
-				.append(", name=").append(name)
+				.append(", type=").append(type)
+				.append(", url=").append(url)
 				.append("]");
 		return builder.toString();
 	}
