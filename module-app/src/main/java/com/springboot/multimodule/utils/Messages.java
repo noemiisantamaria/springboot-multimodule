@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Messages {
-	
+
 	@Autowired
 	private MessageSource messageSource;
 
@@ -27,6 +27,6 @@ public class Messages {
 	}
 
 	public static String get(String code, Object[] args) {
-		return accessor.getMessage(code,args);
+		return accessor.getMessage(code, args);
 	}
 }
