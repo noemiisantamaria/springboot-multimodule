@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,15 @@ public class SuperheroController {
 		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.CREATED);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}
+	
+	@DeleteMapping(path = "/superhero/{idSuperhero}")
+	public ResponseEntity<JsonResponseBody> deleteSuperhero(HttpServletRequest request,
+			@PathVariable(value = "idSuperhero") Long idSuperhero) {
+		log.info(info, CONTROLLER + "deleteSuperhero - idSuperhero: {}", idSuperhero);
+		superheroService.deleteSuperhero(idSuperhero);
+		JsonResponseEntity entity = new JsonResponseEntity(Optional.empty(), HttpStatus.OK);
+		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
+	}
 
 	@GetMapping(path = "/superheroes")
 	public ResponseEntity<JsonResponseBody> fetchAllSuperheroes(HttpServletRequest request,
@@ -63,7 +73,7 @@ public class SuperheroController {
 	public ResponseEntity<JsonResponseBody> getSuperhero(HttpServletRequest request,
 			@PathVariable(value = "idSuperhero") Long idSuperhero) {
 		log.info(info, CONTROLLER + "getSuperhero - idSuperhero: {}", idSuperhero);
-		Optional<Superhero> superhero = superheroService.getSuperhero(idSuperhero);
+		Superhero superhero = superheroService.getSuperhero(idSuperhero);
 		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.OK);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}

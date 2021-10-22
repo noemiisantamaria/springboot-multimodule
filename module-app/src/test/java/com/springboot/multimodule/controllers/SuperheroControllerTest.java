@@ -13,12 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.multimodule.entities.Superhero;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class SuperheroControllerTest {
 
 	@Autowired
@@ -49,6 +51,20 @@ public class SuperheroControllerTest {
 		Superhero superhero = new Superhero(null, null, null);
 		this.mockMvc.perform(post("/superhero/add").contentType(MediaType.APPLICATION_JSON)
 				.content(jsonSuperhero.write(superhero).getJson())).andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void deleteSuperheroShouldDelete() throws Exception {
+		Superhero superhero = new Superhero(1L, "Thor Odinson");
+		this.mockMvc.perform(put("/superhero/update").contentType(MediaType.APPLICATION_JSON)
+				.content(jsonSuperhero.write(superhero).getJson())).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void deleteSuperheroShouldReturn404() throws Exception {
+		Superhero superhero = new Superhero(-1L, "Thor Odinson");
+		this.mockMvc.perform(put("/superhero/update").contentType(MediaType.APPLICATION_JSON)
+				.content(jsonSuperhero.write(superhero).getJson())).andExpect(status().isNotFound());
 	}
 
 	@Test

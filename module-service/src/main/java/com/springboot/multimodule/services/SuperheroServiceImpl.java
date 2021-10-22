@@ -1,7 +1,5 @@
 package com.springboot.multimodule.services;
 
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -33,6 +31,12 @@ public class SuperheroServiceImpl implements SuperheroService {
 	}
 	
 	@Override
+	public void deleteSuperhero(Long idSuperhero) {
+		sdao.findById(idSuperhero).orElseThrow(() -> new SuperheroNotFoundException());
+		sdao.deleteById(idSuperhero);
+	}
+	
+	@Override
 	public Page<Superhero> fetchAllSuperheroes(Integer page, Integer rows, String sort) {
 		log.info(info, SERVICE + "fetchAllSuperheroes");
 		Pageable pageable = Utils.getPageable(page, rows, sort);
@@ -40,16 +44,13 @@ public class SuperheroServiceImpl implements SuperheroService {
 	}
 
 	@Override
-	public Optional<Superhero> getSuperhero(Long idSuperhero) {
-		Optional<Superhero> superhero = Optional.ofNullable(sdao.findById(idSuperhero).orElseThrow(() -> new SuperheroNotFoundException()));
+	public Superhero getSuperhero(Long idSuperhero) {
+		Superhero superhero = sdao.findById(idSuperhero).orElseThrow(() -> new SuperheroNotFoundException());
 		return superhero;
 	}
 
 	@Override
 	public Superhero updateSuperhero(Superhero superhero) {
-//		return sdao.findById(superhero.getId()).map(hero -> 
-//			sdao.save(superhero)
-//		).orElseThrow(() -> new SuperheroNotFoundException());
 		sdao.findById(superhero.getId()).orElseThrow(() -> new SuperheroNotFoundException());
 		return sdao.save(superhero);
 	}
