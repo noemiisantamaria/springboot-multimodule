@@ -3,7 +3,9 @@ package com.springboot.multimodule.controllers;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -14,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +34,18 @@ public class SuperheroController {
 	private static final String CONTROLLER = "SuperheroController ";
 
 	@Autowired
+	ModelMapper modelMapper;
+
+	@Autowired
 	SuperheroService superheroService;
+
+	@PostMapping(path = "/superhero/add")
+	public ResponseEntity<JsonResponseBody> addSuperhero(@Valid @RequestBody Superhero hero) {
+		log.info(info, CONTROLLER + "addSuperhero - Superhero: {}", hero);
+		Superhero superhero = superheroService.addSuperhero(hero);
+		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.CREATED);
+		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
+	}
 
 	@GetMapping(path = "/superheroes")
 	public ResponseEntity<JsonResponseBody> fetchAllSuperheroes(HttpServletRequest request,

@@ -30,6 +30,12 @@ public class Superhero implements Serializable {
 	public Superhero(Long id) {
 		this.id = id;
 	}
+	
+	public Superhero(String name, String description, String thumbnail) {
+		this.name = name;
+		this.description = description;
+		this.thumbnail = thumbnail;
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
