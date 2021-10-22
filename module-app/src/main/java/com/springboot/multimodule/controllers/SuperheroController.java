@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,8 +62,16 @@ public class SuperheroController {
 	@GetMapping(path = "/superhero/{idSuperhero}")
 	public ResponseEntity<JsonResponseBody> getSuperhero(HttpServletRequest request,
 			@PathVariable(value = "idSuperhero") Long idSuperhero) {
-		log.info(info, CONTROLLER + "getSuperhero");
+		log.info(info, CONTROLLER + "getSuperhero - idSuperhero: {}", idSuperhero);
 		Optional<Superhero> superhero = superheroService.getSuperhero(idSuperhero);
+		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.OK);
+		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
+	}
+	
+	@PutMapping(path = "/superhero/update")
+	public ResponseEntity<JsonResponseBody> updateSuperhero(@Valid @RequestBody Superhero hero) {
+		log.info(info, CONTROLLER + "updateSuperhero - Superhero: {}", hero);
+		Superhero superhero = superheroService.updateSuperhero(hero);
 		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.OK);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}

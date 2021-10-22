@@ -13,5 +13,7 @@ public interface SuperheroService {
 	Page<Superhero> fetchAllSuperheroes(Integer page, Integer rows, String sort);
 	
 	Optional<Superhero> getSuperhero(Long idSuperhero);
+	
+	Superhero updateSuperhero(Superhero superhero);
 
 }

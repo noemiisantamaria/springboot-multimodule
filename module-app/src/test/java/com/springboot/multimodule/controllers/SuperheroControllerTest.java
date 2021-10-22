@@ -2,6 +2,7 @@ package com.springboot.multimodule.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +64,20 @@ public class SuperheroControllerTest {
 	@Test
 	public void getSuperheroShoudReturn404() throws Exception {
 		this.mockMvc.perform(get("/superhero/-1")).andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void updateSuperheroShouldUpdate() throws Exception {
+		Superhero superhero = new Superhero(1L, "Thor Odinson");
+		this.mockMvc.perform(put("/superhero/update").contentType(MediaType.APPLICATION_JSON)
+				.content(jsonSuperhero.write(superhero).getJson())).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void updateSuperheroShouldReturn404() throws Exception {
+		Superhero superhero = new Superhero(-1L, "Thor Odinson");
+		this.mockMvc.perform(put("/superhero/update").contentType(MediaType.APPLICATION_JSON)
+				.content(jsonSuperhero.write(superhero).getJson())).andExpect(status().isNotFound());
 	}
 
 }

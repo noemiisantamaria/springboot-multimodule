@@ -45,4 +45,13 @@ public class SuperheroServiceImpl implements SuperheroService {
 		return superhero;
 	}
 
+	@Override
+	public Superhero updateSuperhero(Superhero superhero) {
+//		return sdao.findById(superhero.getId()).map(hero -> 
+//			sdao.save(superhero)
+//		).orElseThrow(() -> new SuperheroNotFoundException());
+		sdao.findById(superhero.getId()).orElseThrow(() -> new SuperheroNotFoundException());
+		return sdao.save(superhero);
+	}
+
 }
