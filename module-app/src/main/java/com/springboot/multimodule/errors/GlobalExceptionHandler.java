@@ -23,4 +23,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}
 	
+	@ExceptionHandler(IllegalStateException.class)
+	public ResponseEntity<Object> handleIllegalStateException(IllegalStateException ise) {
+		String msg = ise.getCause().getLocalizedMessage();
+		JsonResponseEntity entity = new JsonResponseEntity(HttpStatus.BAD_REQUEST, msg);
+        return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
+	}
+	
 }

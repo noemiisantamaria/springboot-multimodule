@@ -42,6 +42,13 @@ public class SuperheroControllerTest {
 		this.mockMvc.perform(post("/superhero/add").contentType(MediaType.APPLICATION_JSON)
 				.content(jsonSuperhero.write(superhero).getJson())).andExpect(status().isCreated());
 	}
+	
+	@Test
+	public void addSuperheroShouldReturn400() throws Exception {
+		Superhero superhero = new Superhero(null, null, null);
+		this.mockMvc.perform(post("/superhero/add").contentType(MediaType.APPLICATION_JSON)
+				.content(jsonSuperhero.write(superhero).getJson())).andExpect(status().isBadRequest());
+	}
 
 	@Test
 	public void fetchAllSuperheroesShouldReturnAllHeroes() throws Exception {
