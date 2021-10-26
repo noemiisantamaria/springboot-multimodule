@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.multimodule.daos.ComicDao;
 import com.springboot.multimodule.entities.Comic;
-import com.springboot.multimodule.utils.Utils;
 
 @Service @Transactional
 public class ComicsServiceImpl implements ComicService {
@@ -25,9 +24,8 @@ public class ComicsServiceImpl implements ComicService {
 	ComicDao cdao;
 
 	@Override
-	public Page<Comic> fetchAllComics(Integer page, Integer rows, String sort) {
+	public Page<Comic> fetchAllComics(Pageable pageable) {
 		log.info(info, SERVICE + "fetchAllComics");
-		Pageable pageable = Utils.getPageable(page, rows, sort);
 		return cdao.findAll(pageable);
 	}
 

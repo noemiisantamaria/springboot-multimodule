@@ -1,6 +1,7 @@
 package com.springboot.multimodule.services;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.springboot.multimodule.entities.Superhero;
 
@@ -10,7 +11,7 @@ public interface SuperheroService {
 	
 	void deleteSuperhero(Long idSuperhero);
 
-	Page<Superhero> fetchAllSuperheroes(Integer page, Integer rows, String sort);
+	Page<Superhero> fetchAllSuperheroes(Pageable pageable);
 	
 	Superhero getSuperhero(Long idSuperhero);
 	

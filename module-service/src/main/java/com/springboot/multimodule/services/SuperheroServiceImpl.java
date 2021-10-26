@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.springboot.multimodule.daos.SuperheroDao;
 import com.springboot.multimodule.entities.Superhero;
 import com.springboot.multimodule.error.SuperheroNotFoundException;
-import com.springboot.multimodule.utils.Utils;
 
 @Service @Transactional
 public class SuperheroServiceImpl implements SuperheroService {
@@ -24,6 +23,10 @@ public class SuperheroServiceImpl implements SuperheroService {
 	
 	@Autowired
 	SuperheroDao sdao;
+	
+	public SuperheroServiceImpl(SuperheroDao sdao) {
+        this.sdao = sdao;
+    }
 
 	@Override
 	public Superhero addSuperhero(Superhero superhero) {
@@ -32,27 +35,29 @@ public class SuperheroServiceImpl implements SuperheroService {
 	
 	@Override
 	public void deleteSuperhero(Long idSuperhero) {
+		log.info(info, SERVICE + "deleteSuperhero - idSuperhero: {}", idSuperhero);
 		sdao.findById(idSuperhero).orElseThrow(() -> new SuperheroNotFoundException());
 		sdao.deleteById(idSuperhero);
 	}
 	
 	@Override
-	public Page<Superhero> fetchAllSuperheroes(Integer page, Integer rows, String sort) {
+	public Page<Superhero> fetchAllSuperheroes(Pageable pageable) {
 		log.info(info, SERVICE + "fetchAllSuperheroes");
-		Pageable pageable = Utils.getPageable(page, rows, sort);
 		return sdao.findAll(pageable);
 	}
 
 	@Override
 	public Superhero getSuperhero(Long idSuperhero) {
+		log.info(info, SERVICE + "getSuperhero - idSuperhero: {}", idSuperhero);
 		Superhero superhero = sdao.findById(idSuperhero).orElseThrow(() -> new SuperheroNotFoundException());
 		return superhero;
 	}
 
 	@Override
 	public Superhero updateSuperhero(Superhero superhero) {
+		log.info(info, SERVICE + "updateSuperhero - superhero: {}", superhero);
 		sdao.findById(superhero.getId()).orElseThrow(() -> new SuperheroNotFoundException());
 		return sdao.save(superhero);
 	}
-
+	
 }
