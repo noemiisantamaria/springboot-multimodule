@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.springboot.multimodule.daos.SuperheroDao;
 import com.springboot.multimodule.entities.Superhero;
@@ -28,6 +33,11 @@ public class SuperheroServiceTest {
 	
 	private SuperheroService superheroService;
 	
+	private Pageable pageable = PageRequest.of(0, 10);
+	private Page<Superhero> pagedHeroList = new PageImpl<Superhero>(Collections.emptyList());
+	private Superhero superhero = new Superhero(1L);
+	private Superhero invalidSuperhero = new Superhero();
+	
 	@BeforeEach
     public void init() {
 		superheroService = new SuperheroServiceImpl(mockSuperheroDao);
@@ -35,27 +45,21 @@ public class SuperheroServiceTest {
 
 	@Test
 	public void addSuperheroShouldCreate() throws Exception {
-		String name = "Natasha Romanoff";
-		String description = "Black Widow";
-		String thumbnail = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg";
-		Superhero superhero = new Superhero(name, description, thumbnail);
 		when(mockSuperheroDao.save(any(Superhero.class))).thenReturn(superhero);
 		Superhero savedSuperhero = superheroService.addSuperhero(superhero);
-		assertThat(savedSuperhero.getName()).isNotNull();
+		assertThat(savedSuperhero.getId()).isNotNull();
 	}
 
 	@Test
 	public void addSuperheroShouldReturn400() throws Exception {
-		Superhero superhero = new Superhero(null, null, null);
 		when(mockSuperheroDao.save(any(Superhero.class))).thenThrow(IllegalStateException.class);
 		assertThrows(IllegalStateException.class, () -> {
-			superheroService.addSuperhero(superhero);
+			superheroService.addSuperhero(invalidSuperhero);
 		});
 	}
 
 	@Test
 	public void deleteSuperheroShouldDelete() throws Exception {
-		Superhero superhero = new Superhero(1L);
 		when(mockSuperheroDao.findById(anyLong())).thenReturn(Optional.of(superhero));
 		superheroService.deleteSuperhero(superhero.getId());
 		verify(mockSuperheroDao, times(1)).deleteById(superhero.getId());
@@ -66,6 +70,44 @@ public class SuperheroServiceTest {
 		when(mockSuperheroDao.findById(anyLong())).thenThrow(SuperheroNotFoundException.class);
 		assertThrows(SuperheroNotFoundException.class, () -> {
 			superheroService.deleteSuperhero(1L);
+		});
+	}
+	
+	@Test
+	public void getSuperheroShouldReturnHero() throws Exception {
+		when(mockSuperheroDao.findById(anyLong())).thenReturn(Optional.of(superhero));
+		Superhero hero = superheroService.getSuperhero(superhero.getId());
+		assertThat(hero.getId()).isNotNull();
+	}
+	
+	@Test
+	public void getSuperheroShouldReturn404() throws Exception {
+		when(mockSuperheroDao.findById(anyLong())).thenThrow(SuperheroNotFoundException.class);
+		assertThrows(SuperheroNotFoundException.class, () -> {
+			superheroService.getSuperhero(anyLong());
+		});
+	}
+	
+	@Test
+	public void fetchAllSuperheroesShouldReturnHeroes() throws Exception {
+		when(mockSuperheroDao.findAll(any(Pageable.class))).thenReturn(pagedHeroList);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(pageable);
+		assertThat(list.getTotalElements()).isNotNull();
+	}
+	
+	@Test
+	public void updateSuperheroShouldReturnHero() throws Exception {
+		when(mockSuperheroDao.findById(anyLong())).thenReturn(Optional.of(superhero));
+		when(mockSuperheroDao.save(any(Superhero.class))).thenReturn(superhero);
+		Superhero hero = superheroService.updateSuperhero(superhero);
+		assertThat(hero.getId()).isNotNull();
+	}
+	
+	@Test
+	public void updateSuperheroShouldReturn404() throws Exception {
+		when(mockSuperheroDao.findById(anyLong())).thenThrow(SuperheroNotFoundException.class);
+		assertThrows(SuperheroNotFoundException.class, () -> {
+			superheroService.updateSuperhero(superhero);
 		});
 	}
 

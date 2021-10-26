@@ -31,17 +31,6 @@ public class Superhero implements Serializable {
 		this.id = id;
 	}
 	
-	public Superhero(Long id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-	
-	public Superhero(String name, String description, String thumbnail) {
-		this.name = name;
-		this.description = description;
-		this.thumbnail = thumbnail;
-	}
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID", updatable = false, nullable = false)
