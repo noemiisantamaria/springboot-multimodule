@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.multimodule.daos.SuperheroDao;
 import com.springboot.multimodule.entities.Superhero;
-import com.springboot.multimodule.error.SuperheroNotFoundException;
+import com.springboot.multimodule.errors.SuperheroNotFoundException;
 import com.springboot.multimodule.specification.GenericSpecification;
 import com.springboot.multimodule.specification.GenericSpecificationBuilder;
 import com.springboot.multimodule.utils.CriteriaParser;

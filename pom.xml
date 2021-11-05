@@ -25,6 +25,7 @@
 
 	<modules>
 		<module>module-app</module>
+		<module>module-common</module>
 		<module>module-persistence</module>
 		<module>module-service</module>
 	</modules>

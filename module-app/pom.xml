@@ -16,12 +16,17 @@
 	<description>Main module of this project. 
 	It contains the application class in which the main method is defined that is necessary to run the Spring Boot Application. 
 	It also contains application configuration properties, controllers and resources.</description>
-	
+
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.springboot.multimodule</groupId>
+			<artifactId>module-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.springboot.multimodule</groupId>
 			<artifactId>module-persistence</artifactId>
@@ -89,5 +94,5 @@
 			</build>
 		</profile>
 	</profiles>
-	
+
 </project>

@@ -2,9 +2,10 @@
 PoC that shows how to create a Spring Boot multimodule applications.
 
 There are several modules:
-* **module-app**: the main library providing features that support the other parts of Spring Boot. These include the `SpringbootMultimoduleApplication` class, providing static methods to start this Spring Boot Application, controllers and resources. It has both module-persistence and module-service dependencies.
+* **module-app**: the main library providing features that support the other parts of Spring Boot. These include the `SpringbootMultimoduleApplication` class, providing static methods to start this Spring Boot Application, controllers and resources. It has module-persistence, module-service and module-common dependencies.
 * **module-persistence**: contains entities and repositories.
-* **module-service**: contains all services and service implementations. It depends on module-persistence.
+* **module-service**: contains all services and service implementations. It depends on module-persistence and module-common.
+* **module-common**: contains all commons classes and exception handler.
 
 There are 4 properties files:
 * **application-local.properties** for local environment

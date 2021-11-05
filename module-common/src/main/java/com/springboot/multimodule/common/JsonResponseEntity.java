@@ -1,13 +1,12 @@
 package com.springboot.multimodule.common;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
-import com.springboot.multimodule.utils.Messages;
-
-import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
 
 public class JsonResponseEntity {
 	

@@ -25,8 +25,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.springboot.multimodule.daos.SuperheroDao;
 import com.springboot.multimodule.entities.Superhero;
-import com.springboot.multimodule.error.SearchParamInvalidException;
-import com.springboot.multimodule.error.SuperheroNotFoundException;
+import com.springboot.multimodule.errors.SearchParamInvalidException;
+import com.springboot.multimodule.errors.SuperheroNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class SuperheroServiceTest {

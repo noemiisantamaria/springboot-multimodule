@@ -1,6 +1,6 @@
-package com.springboot.multimodule.error;
+package com.springboot.multimodule.errors;
 
-import com.springboot.multimodule.utils.Messages;
+import com.springboot.multimodule.common.Messages;
 
 public class SuperheroNotFoundException extends RuntimeException {
 

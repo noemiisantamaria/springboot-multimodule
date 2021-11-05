@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.springboot.multimodule.error.SearchParamInvalidException;
+import com.springboot.multimodule.errors.SearchParamInvalidException;
 import com.springboot.multimodule.utils.SearchCriteria;
 import com.springboot.multimodule.utils.SearchOperation;
 

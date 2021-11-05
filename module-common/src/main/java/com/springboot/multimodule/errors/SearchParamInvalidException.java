@@ -1,4 +1,4 @@
-package com.springboot.multimodule.error;
+package com.springboot.multimodule.errors;
 
 public class SearchParamInvalidException extends RuntimeException {
 	

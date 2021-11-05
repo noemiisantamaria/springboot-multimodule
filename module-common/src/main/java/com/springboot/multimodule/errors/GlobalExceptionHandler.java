@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.springboot.multimodule.common.JsonResponseEntity;
-import com.springboot.multimodule.error.SearchParamInvalidException;
-import com.springboot.multimodule.error.SuperheroNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
