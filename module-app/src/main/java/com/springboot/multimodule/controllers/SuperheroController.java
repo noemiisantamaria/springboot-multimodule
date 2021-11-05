@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.multimodule.common.JsonResponseBody;
@@ -44,7 +45,7 @@ public class SuperheroController {
 		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.CREATED);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}
-	
+
 	@DeleteMapping(path = "/superhero/{idSuperhero}")
 	public ResponseEntity<JsonResponseBody> deleteSuperhero(HttpServletRequest request,
 			@PathVariable(value = "idSuperhero") Long idSuperhero) {
@@ -55,9 +56,10 @@ public class SuperheroController {
 	}
 
 	@GetMapping(path = "/superheroes")
-	public ResponseEntity<JsonResponseBody> fetchAllSuperheroes(Pageable pageable) {
-		log.info(info, CONTROLLER + "fetchAllSuperheroes");
-		Page<Superhero> list = superheroService.fetchAllSuperheroes(pageable);
+	public ResponseEntity<JsonResponseBody> fetchAllSuperheroes(
+			@RequestParam(value = "search", required = false) String search, Pageable pageable) {
+		log.info(info, CONTROLLER + "fetchAllSuperheroes - search: {}", search);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(search, pageable);
 		JsonResponseEntity entity = new JsonResponseEntity(pageable.getPageNumber(), list);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}
@@ -70,7 +72,7 @@ public class SuperheroController {
 		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.OK);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}
-	
+
 	@PutMapping(path = "/superhero/update")
 	public ResponseEntity<JsonResponseBody> updateSuperhero(@Valid @RequestBody Superhero hero) {
 		log.info(info, CONTROLLER + "updateSuperhero - Superhero: {}", hero);

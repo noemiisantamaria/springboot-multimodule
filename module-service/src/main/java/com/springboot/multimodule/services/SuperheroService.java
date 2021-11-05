@@ -10,8 +10,8 @@ public interface SuperheroService {
 	Superhero addSuperhero(Superhero superhero);
 	
 	void deleteSuperhero(Long idSuperhero);
-
-	Page<Superhero> fetchAllSuperheroes(Pageable pageable);
+	
+	Page<Superhero> fetchAllSuperheroes(String search, Pageable pageable);
 	
 	Superhero getSuperhero(Long idSuperhero);
 	

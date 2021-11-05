@@ -1,4 +1,4 @@
-package com.springboot.multimodule.common;
+package com.springboot.multimodule.utils;
 
 import java.util.Locale;
 

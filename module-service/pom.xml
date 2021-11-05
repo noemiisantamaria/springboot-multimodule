@@ -26,6 +26,6 @@
             <artifactId>module-persistence</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-    </dependencies>
+	</dependencies>
 	
 </project>

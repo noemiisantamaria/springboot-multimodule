@@ -14,34 +14,39 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.springboot.multimodule.daos.SuperheroDao;
 import com.springboot.multimodule.entities.Superhero;
+import com.springboot.multimodule.error.SearchParamInvalidException;
 import com.springboot.multimodule.error.SuperheroNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class SuperheroServiceTest {
-	
+
 	@Mock
 	private SuperheroDao mockSuperheroDao;
-	
+
 	private SuperheroService superheroService;
-	
+
 	private Pageable pageable = PageRequest.of(0, 10);
 	private Page<Superhero> pagedHeroList = new PageImpl<Superhero>(Collections.emptyList());
+	private String search = "id:1";
+	private String searchInvalid = "(id:1OR)";
 	private Superhero superhero = new Superhero(1L);
 	private Superhero invalidSuperhero = new Superhero();
-	
+
 	@BeforeEach
-    public void init() {
+	public void init() {
 		superheroService = new SuperheroServiceImpl(mockSuperheroDao);
-    }
+	}
 
 	@Test
 	public void addSuperheroShouldCreate() throws Exception {
@@ -64,7 +69,7 @@ public class SuperheroServiceTest {
 		superheroService.deleteSuperhero(superhero.getId());
 		verify(mockSuperheroDao, times(1)).deleteById(superhero.getId());
 	}
-	
+
 	@Test
 	public void deleteSuperheroShouldReturn404() throws Exception {
 		when(mockSuperheroDao.findById(anyLong())).thenThrow(SuperheroNotFoundException.class);
@@ -72,14 +77,14 @@ public class SuperheroServiceTest {
 			superheroService.deleteSuperhero(1L);
 		});
 	}
-	
+
 	@Test
 	public void getSuperheroShouldReturnHero() throws Exception {
 		when(mockSuperheroDao.findById(anyLong())).thenReturn(Optional.of(superhero));
 		Superhero hero = superheroService.getSuperhero(superhero.getId());
 		assertThat(hero.getId()).isNotNull();
 	}
-	
+
 	@Test
 	public void getSuperheroShouldReturn404() throws Exception {
 		when(mockSuperheroDao.findById(anyLong())).thenThrow(SuperheroNotFoundException.class);
@@ -87,14 +92,36 @@ public class SuperheroServiceTest {
 			superheroService.getSuperhero(anyLong());
 		});
 	}
-	
+
 	@Test
-	public void fetchAllSuperheroesShouldReturnHeroes() throws Exception {
+	public void fetchAllSuperheroesWhenSearchEmptyShouldReturnHeroes() throws Exception {
 		when(mockSuperheroDao.findAll(any(Pageable.class))).thenReturn(pagedHeroList);
-		Page<Superhero> list = superheroService.fetchAllSuperheroes(pageable);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes("", pageable);
 		assertThat(list.getTotalElements()).isNotNull();
 	}
-	
+
+	@Test
+	public void fetchAllSuperheroesWhenSearchInvalidShouldReturn400() throws Exception {
+		assertThrows(SearchParamInvalidException.class, () -> {
+			superheroService.fetchAllSuperheroes(searchInvalid, pageable);
+		});
+	}
+
+	@Test
+	public void fetchAllSuperheroesWhenSearchNullShouldReturnHeroes() throws Exception {
+		when(mockSuperheroDao.findAll(any(Pageable.class))).thenReturn(pagedHeroList);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(null, pageable);
+		assertThat(list.getTotalElements()).isNotNull();
+	}
+
+	@Test
+	public void fetchAllSuperheroesShouldReturnHeroes() throws Exception {
+		when(mockSuperheroDao.findAll(ArgumentMatchers.<Specification<Superhero>>any(), any(Pageable.class)))
+				.thenReturn(pagedHeroList);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(search, pageable);
+		assertThat(list.getTotalElements()).isNotNull();
+	}
+
 	@Test
 	public void updateSuperheroShouldReturnHero() throws Exception {
 		when(mockSuperheroDao.findById(anyLong())).thenReturn(Optional.of(superhero));
@@ -102,7 +129,7 @@ public class SuperheroServiceTest {
 		Superhero hero = superheroService.updateSuperhero(superhero);
 		assertThat(hero.getId()).isNotNull();
 	}
-	
+
 	@Test
 	public void updateSuperheroShouldReturn404() throws Exception {
 		when(mockSuperheroDao.findById(anyLong())).thenThrow(SuperheroNotFoundException.class);
