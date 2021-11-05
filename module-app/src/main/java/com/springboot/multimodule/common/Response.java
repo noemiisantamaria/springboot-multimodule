@@ -1,4 +1,4 @@
-package com.springboot.multimodule.utils;
+package com.springboot.multimodule.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 

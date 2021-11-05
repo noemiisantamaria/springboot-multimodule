@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.springboot.multimodule.common.JsonResponseEntity;
 import com.springboot.multimodule.error.SuperheroNotFoundException;
-import com.springboot.multimodule.utils.JsonResponseEntity;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {

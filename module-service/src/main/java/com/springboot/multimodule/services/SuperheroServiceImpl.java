@@ -8,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.multimodule.daos.SuperheroDao;
 import com.springboot.multimodule.entities.Superhero;
 import com.springboot.multimodule.error.SuperheroNotFoundException;
 
-@Service @Transactional
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
 public class SuperheroServiceImpl implements SuperheroService {
 	
 	private static final Logger log = LoggerFactory.getLogger(SuperheroServiceImpl.class);
@@ -23,10 +25,6 @@ public class SuperheroServiceImpl implements SuperheroService {
 	
 	@Autowired
 	SuperheroDao sdao;
-	
-	public SuperheroServiceImpl(SuperheroDao sdao) {
-        this.sdao = sdao;
-    }
 
 	@Override
 	public Superhero addSuperhero(Superhero superhero) {

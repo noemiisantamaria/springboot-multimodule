@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.multimodule.daos.ComicDao;
 import com.springboot.multimodule.entities.Comic;
 
-@Service @Transactional
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
 public class ComicServiceImpl implements ComicService {
 	
 	private static final Logger log = LoggerFactory.getLogger(ComicServiceImpl.class);
@@ -22,10 +24,6 @@ public class ComicServiceImpl implements ComicService {
 	
 	@Autowired
 	ComicDao cdao;
-
-	public ComicServiceImpl(ComicDao cdao) {
-		this.cdao = cdao;
-	}
 
 	@Override
 	public Page<Comic> fetchAllComics(Pageable pageable) {

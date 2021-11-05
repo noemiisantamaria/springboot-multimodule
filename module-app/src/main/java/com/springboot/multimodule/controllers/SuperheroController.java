@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.multimodule.common.JsonResponseBody;
+import com.springboot.multimodule.common.JsonResponseEntity;
 import com.springboot.multimodule.entities.Superhero;
 import com.springboot.multimodule.services.SuperheroService;
-import com.springboot.multimodule.utils.JsonResponseBody;
-import com.springboot.multimodule.utils.JsonResponseEntity;
 
 @RestController
 public class SuperheroController {

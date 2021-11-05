@@ -11,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.multimodule.common.JsonResponseBody;
+import com.springboot.multimodule.common.JsonResponseEntity;
 import com.springboot.multimodule.entities.Comic;
 import com.springboot.multimodule.services.ComicService;
-import com.springboot.multimodule.utils.JsonResponseBody;
-import com.springboot.multimodule.utils.JsonResponseEntity;
 
 @RestController
 public class ComicController {
