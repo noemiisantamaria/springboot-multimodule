@@ -1,5 +1,6 @@
 package com.springboot.multimodule.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,9 +58,10 @@ public class SuperheroController {
 
 	@GetMapping(path = "/superheroes")
 	public ResponseEntity<JsonResponseBody> fetchAllSuperheroes(
-			@RequestParam(value = "search", required = false) String search, Pageable pageable) {
-		log.info(info, CONTROLLER + "fetchAllSuperheroes - search: {}", search);
-		Page<Superhero> list = superheroService.fetchAllSuperheroes(search, pageable);
+			@RequestParam(value = "search", required = false) String search,
+			@RequestParam(value = "comics", required = false) List<Integer> comics, Pageable pageable) {
+		log.info(info, CONTROLLER + "fetchAllSuperheroes - search: {}, comics: {}", search, comics);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(search, comics, pageable);
 		JsonResponseEntity entity = new JsonResponseEntity(pageable.getPageNumber(), list);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}

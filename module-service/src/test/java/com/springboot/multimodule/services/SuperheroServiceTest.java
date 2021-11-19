@@ -8,7 +8,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +39,8 @@ public class SuperheroServiceTest {
 
 	private SuperheroService superheroService;
 
+	private List<Integer> comics = Arrays.asList(1, 2, 3);
+	private List<Integer> comicsEmpty = new ArrayList<>();
 	private Pageable pageable = PageRequest.of(0, 10);
 	private Page<Superhero> pagedHeroList = new PageImpl<Superhero>(Collections.emptyList());
 	private String search = "id:1";
@@ -94,31 +99,61 @@ public class SuperheroServiceTest {
 	}
 
 	@Test
-	public void fetchAllSuperheroesWhenSearchEmptyShouldReturnHeroes() throws Exception {
+	public void fetchAllSuperheroesShouldReturnHeroes() throws Exception {
+		when(mockSuperheroDao.findAll(ArgumentMatchers.<Specification<Superhero>>any(), any(Pageable.class)))
+				.thenReturn(pagedHeroList);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(search, comics, pageable);
+		assertThat(list.getTotalElements()).isNotNull();
+	}
+
+	@Test
+	public void fetchAllSuperheroesWhenSearchEmptyAndComicsNullShouldReturnHeroes() throws Exception {
 		when(mockSuperheroDao.findAll(any(Pageable.class))).thenReturn(pagedHeroList);
-		Page<Superhero> list = superheroService.fetchAllSuperheroes("", pageable);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes("", null, pageable);
+		assertThat(list.getTotalElements()).isNotNull();
+	}
+
+	@Test
+	public void fetchAllSuperheroesWhenSearchEmptyShouldReturnHeroes() throws Exception {
+		when(mockSuperheroDao.findAll(ArgumentMatchers.<Specification<Superhero>>any(), any(Pageable.class)))
+				.thenReturn(pagedHeroList);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes("", comics, pageable);
+		assertThat(list.getTotalElements()).isNotNull();
+	}
+
+	@Test
+	public void fetchAllSuperheroesWhenSearchEmptyAndComicsEmptyShouldReturnHeroes() throws Exception {
+		when(mockSuperheroDao.findAll(any(Pageable.class))).thenReturn(pagedHeroList);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes("", comicsEmpty, pageable);
 		assertThat(list.getTotalElements()).isNotNull();
 	}
 
 	@Test
 	public void fetchAllSuperheroesWhenSearchInvalidShouldReturn400() throws Exception {
 		assertThrows(SearchParamInvalidException.class, () -> {
-			superheroService.fetchAllSuperheroes(searchInvalid, pageable);
+			superheroService.fetchAllSuperheroes(searchInvalid, comics, pageable);
 		});
 	}
 
 	@Test
-	public void fetchAllSuperheroesWhenSearchNullShouldReturnHeroes() throws Exception {
+	public void fetchAllSuperheroesWhenSearchNullAndComicsNullShouldReturnHeroes() throws Exception {
 		when(mockSuperheroDao.findAll(any(Pageable.class))).thenReturn(pagedHeroList);
-		Page<Superhero> list = superheroService.fetchAllSuperheroes(null, pageable);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(null, null, pageable);
 		assertThat(list.getTotalElements()).isNotNull();
 	}
 
 	@Test
-	public void fetchAllSuperheroesShouldReturnHeroes() throws Exception {
+	public void fetchAllSuperheroesWhenSearchNullAndComicsEmptyShouldReturnHeroes() throws Exception {
+		when(mockSuperheroDao.findAll(any(Pageable.class))).thenReturn(pagedHeroList);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(null, comicsEmpty, pageable);
+		assertThat(list.getTotalElements()).isNotNull();
+	}
+
+	@Test
+	public void fetchAllSuperheroesWhenSearchNullShouldReturnHeroes() throws Exception {
 		when(mockSuperheroDao.findAll(ArgumentMatchers.<Specification<Superhero>>any(), any(Pageable.class)))
 				.thenReturn(pagedHeroList);
-		Page<Superhero> list = superheroService.fetchAllSuperheroes(search, pageable);
+		Page<Superhero> list = superheroService.fetchAllSuperheroes(null, comics, pageable);
 		assertThat(list.getTotalElements()).isNotNull();
 	}
 

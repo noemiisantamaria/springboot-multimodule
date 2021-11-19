@@ -1,5 +1,7 @@
 package com.springboot.multimodule.services;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -15,6 +17,7 @@ import com.springboot.multimodule.entities.Superhero;
 import com.springboot.multimodule.errors.SuperheroNotFoundException;
 import com.springboot.multimodule.specification.GenericSpecification;
 import com.springboot.multimodule.specification.GenericSpecificationBuilder;
+import com.springboot.multimodule.specification.SuperheroSpecification;
 import com.springboot.multimodule.utils.CriteriaParser;
 
 import lombok.AllArgsConstructor;
@@ -22,11 +25,11 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class SuperheroServiceImpl implements SuperheroService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(SuperheroServiceImpl.class);
 	private static final Marker info = MarkerFactory.getMarker("INFO");
 	private static final String SERVICE = "[SuperheroServiceImpl] ";
-	
+
 	@Autowired
 	SuperheroDao sdao;
 
@@ -34,29 +37,35 @@ public class SuperheroServiceImpl implements SuperheroService {
 	public Superhero addSuperhero(Superhero superhero) {
 		return sdao.save(superhero);
 	}
-	
+
 	@Override
 	public void deleteSuperhero(Long idSuperhero) {
 		log.info(info, SERVICE + "deleteSuperhero - idSuperhero: {}", idSuperhero);
 		sdao.findById(idSuperhero).orElseThrow(() -> new SuperheroNotFoundException(idSuperhero));
 		sdao.deleteById(idSuperhero);
 	}
-	
+
 	@Override
-	public Page<Superhero> fetchAllSuperheroes(String search, Pageable pageable) {
-		log.info(info, SERVICE + "fetchAllSuperheroes - search");
+	public Page<Superhero> fetchAllSuperheroes(String search, List<Integer> comics, Pageable pageable) {
+		log.info(info, SERVICE + "fetchAllSuperheroes - search: {}, comics: {}", search, comics);
 		Specification<Superhero> specs = resolveSpecificationFromSearch(search);
+
+		if (comics != null && !comics.isEmpty()) {
+			specs = (specs == null) ? SuperheroSpecification.havingComicsIdSpec(comics)
+					: specs.and(SuperheroSpecification.havingComicsIdSpec(comics));
+		}
+
 		return specs == null ? sdao.findAll(pageable) : sdao.findAll(specs, pageable);
 	}
-	
+
 	private Specification<Superhero> resolveSpecificationFromSearch(String searchParameters) {
 		if (searchParameters != null && !searchParameters.equals("")) {
 			CriteriaParser parser = new CriteriaParser();
 			GenericSpecificationBuilder<Superhero> specBuilder = new GenericSpecificationBuilder<>();
-			return specBuilder.build(parser.parse(searchParameters), GenericSpecification::new);			
+			return specBuilder.build(parser.parse(searchParameters), GenericSpecification::new);
 		}
 		return null;
-    }
+	}
 
 	@Override
 	public Superhero getSuperhero(Long idSuperhero) {
@@ -71,5 +80,5 @@ public class SuperheroServiceImpl implements SuperheroService {
 		sdao.findById(superhero.getId()).orElseThrow(() -> new SuperheroNotFoundException(superhero.getId()));
 		return sdao.save(superhero);
 	}
-	
+
 }
