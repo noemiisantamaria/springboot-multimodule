@@ -5,7 +5,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-public class SuperheroDto {
+public class ComicDto {
 
 	@Getter
 	@Setter
@@ -13,18 +13,10 @@ public class SuperheroDto {
 
 	@Getter
 	@Setter
-	String name;
+	String collectionUri;
 
 	@Getter
 	@Setter
-	String description;
-
-	@Getter
-	@Setter
-	String thumbnail;
-
-	@Getter
-	@Setter
-	private Set<ComicDto> comics;
+	private Set<ItemDto> items;
 
 }

@@ -1,5 +1,8 @@
 package com.springboot.multimodule.controllers;
 
+import java.util.function.Function;
+
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.multimodule.common.JsonResponseBody;
 import com.springboot.multimodule.common.JsonResponseEntity;
+import com.springboot.multimodule.dtos.ComicDto;
 import com.springboot.multimodule.entities.Comic;
 import com.springboot.multimodule.services.ComicService;
 
@@ -25,12 +29,25 @@ public class ComicController {
 	@Autowired
 	ComicService comicService;
 	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	@GetMapping(path = "/comics")
 	public ResponseEntity<JsonResponseBody> fetchAllComics(Pageable pageable) {
 		log.info(info, "[ComicController] fetchAllComics");
-		Page<Comic> list = comicService.fetchAllComics(pageable);
+		Page<ComicDto> list = convertListToDto(comicService.fetchAllComics(pageable));
 		JsonResponseEntity entity = new JsonResponseEntity(pageable.getPageNumber(), list);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
+	}
+	
+	private Page<ComicDto> convertListToDto(Page<Comic> list) {
+		Page<ComicDto> dtoPage = list.map(new Function<Comic, ComicDto>() {
+			@Override
+			public ComicDto apply(Comic comic) {
+				return modelMapper.map(comic, ComicDto.class);
+			}
+		});
+		return dtoPage;
 	}
 
 }

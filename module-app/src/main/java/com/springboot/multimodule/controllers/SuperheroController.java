@@ -2,10 +2,12 @@ package com.springboot.multimodule.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.multimodule.common.JsonResponseBody;
 import com.springboot.multimodule.common.JsonResponseEntity;
+import com.springboot.multimodule.dtos.SuperheroDto;
 import com.springboot.multimodule.entities.Superhero;
 import com.springboot.multimodule.services.SuperheroService;
 
@@ -35,7 +38,10 @@ public class SuperheroController {
 	private static final Logger log = LoggerFactory.getLogger(SuperheroController.class);
 	private static final Marker info = MarkerFactory.getMarker("INFO");
 	private static final String CONTROLLER = "SuperheroController ";
-
+	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	@Autowired
 	SuperheroService superheroService;
 
@@ -61,7 +67,7 @@ public class SuperheroController {
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "comics", required = false) List<Integer> comics, Pageable pageable) {
 		log.info(info, CONTROLLER + "fetchAllSuperheroes - search: {}, comics: {}", search, comics);
-		Page<Superhero> list = superheroService.fetchAllSuperheroes(search, comics, pageable);
+		Page<SuperheroDto> list = convertListToDto(superheroService.fetchAllSuperheroes(search, comics, pageable));
 		JsonResponseEntity entity = new JsonResponseEntity(pageable.getPageNumber(), list);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}
@@ -70,7 +76,7 @@ public class SuperheroController {
 	public ResponseEntity<JsonResponseBody> getSuperhero(HttpServletRequest request,
 			@PathVariable(value = "idSuperhero") Long idSuperhero) {
 		log.info(info, CONTROLLER + "getSuperhero - idSuperhero: {}", idSuperhero);
-		Superhero superhero = superheroService.getSuperhero(idSuperhero);
+		SuperheroDto superhero = convertToDto(superheroService.getSuperhero(idSuperhero));
 		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.OK);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
 	}
@@ -81,6 +87,21 @@ public class SuperheroController {
 		Superhero superhero = superheroService.updateSuperhero(hero);
 		JsonResponseEntity entity = new JsonResponseEntity(Optional.ofNullable(superhero), HttpStatus.OK);
 		return ResponseEntity.status(entity.getStatus()).body(entity.getBody());
+	}
+	
+	private SuperheroDto convertToDto(Superhero superhero) {
+		SuperheroDto superheroDto = modelMapper.map(superhero, SuperheroDto.class);
+		return superheroDto;
+	}
+	
+	private Page<SuperheroDto> convertListToDto(Page<Superhero> list) {
+		Page<SuperheroDto> dtoPage = list.map(new Function<Superhero, SuperheroDto>() {
+			@Override
+			public SuperheroDto apply(Superhero superhero) {
+				return modelMapper.map(superhero, SuperheroDto.class);
+			}
+		});
+		return dtoPage;
 	}
 
 }

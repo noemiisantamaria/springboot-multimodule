@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -50,7 +48,6 @@ public class Superhero implements Serializable {
 	@Getter @Setter
 	private String thumbnail;
 	
-	@JsonIgnoreProperties({"superheroes"})
 	@ManyToMany
 	@JoinTable(
 	  name = "SUPERHEROCOMIC", 
@@ -59,7 +56,6 @@ public class Superhero implements Serializable {
 	@Getter @Setter
 	private Set<Comic> comics;
 	
-	@JsonIgnoreProperties({"superheroes"})
 	@ManyToMany
 	@JoinTable(
 	  name = "SUPERHEROURL", 

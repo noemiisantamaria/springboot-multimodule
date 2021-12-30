@@ -1,11 +1,9 @@
 package com.springboot.multimodule.dtos;
 
-import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
 
-public class SuperheroDto {
+public class ItemDto {
 
 	@Getter
 	@Setter
@@ -17,14 +15,6 @@ public class SuperheroDto {
 
 	@Getter
 	@Setter
-	String description;
-
-	@Getter
-	@Setter
-	String thumbnail;
-
-	@Getter
-	@Setter
-	private Set<ComicDto> comics;
+	String resourceUri;
 
 }
