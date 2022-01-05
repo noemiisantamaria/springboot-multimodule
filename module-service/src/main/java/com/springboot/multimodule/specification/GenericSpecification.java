@@ -8,6 +8,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.springboot.multimodule.errors.SearchParamInvalidException;
 import com.springboot.multimodule.utils.SearchCriteria;
 
 public class GenericSpecification<T> implements Specification<T> {
@@ -50,18 +51,21 @@ public class GenericSpecification<T> implements Specification<T> {
 	}
 
 	private Path<?> getPath(Root<T> root) {
+		try {
+			if (!criteria.getKey().contains(".")) {
+				return root.get(criteria.getKey());
+			}
 
-		if (!criteria.getKey().contains(".")) {
-			return root.get(criteria.getKey());
+			String[] levels = criteria.getKey().split("\\.");
+			Path<?> path = root;
+			for (String level : levels) {
+				path = path.get(level);
+			}
+
+			return path;
+		} catch (Exception e) {
+			throw new SearchParamInvalidException(criteria.getKey());
 		}
-
-		String[] levels = criteria.getKey().split("\\.");
-		Path<?> path = root;
-		for (String level : levels) {
-			path = path.get(level);
-		}
-
-		return path;
 	}
 
 }

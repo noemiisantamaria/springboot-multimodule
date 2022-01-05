@@ -16,7 +16,7 @@ public class CriteriaParser {
     private static Map<String, Operator> ops;
     
     private static Pattern SpecCriteraRegex = Pattern.compile("^(\\w.+?)(" + Joiner.on("|")
-  .join(SearchOperation.SIMPLE_OPERATION_SET) + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?)$");
+  .join(SearchOperation.SIMPLE_OPERATION_SET) + ")(\\p{Punct}?)([\\w\\s\\S\\W]+?)(\\p{Punct}?)$");
 
     private enum Operator {
         OR(1), AND(2);
@@ -46,7 +46,7 @@ public class CriteriaParser {
         Deque<Object> output = new LinkedList<>();
         Deque<String> stack = new LinkedList<>();
         
-        Arrays.stream(searchParam.split("\\s+")).forEach(token -> {
+        Arrays.stream(searchParam.split("\\s(?=(?:[^\"]*(['\"])[^\"]*\\1)*[^\"]*$)")).forEach(token -> {
             if (ops.containsKey(token)) {
                 while (!stack.isEmpty() && isHigerPrecedenceOperator(token, stack.peek()))
                     output.push(stack.pop()
